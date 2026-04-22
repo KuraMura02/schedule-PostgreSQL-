@@ -1,0 +1,16 @@
+from rest_framework import filters, viewsets
+
+from core.permissions import UserManagementPermission
+
+from .models import User
+from .serializers import UserSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [UserManagementPermission]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["username", "email", "first_name", "last_name", "role"]
+    ordering_fields = ["username", "email", "created_at"]
+    ordering = ["username"]
