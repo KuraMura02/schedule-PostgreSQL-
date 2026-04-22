@@ -3,6 +3,7 @@ from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
+from dj_database_url import UnknownSchemeError
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,13 +81,25 @@ if not database_url and all(
         f"@{os.getenv('PGHOST')}:{os.getenv('PGPORT')}/{os.getenv('PGDATABASE')}"
     )
 
-DATABASES = {
-    "default": dj_database_url.parse(
+if database_url:
+    database_url = database_url.strip()
+    if "://" not in database_url or database_url.startswith("://"):
+        database_url = None
+
+try:
+    parsed_database = dj_database_url.parse(
         database_url or "sqlite:///db.sqlite3",
         conn_max_age=600,
         conn_health_checks=True,
     )
-}
+except UnknownSchemeError:
+    parsed_database = dj_database_url.parse(
+        "sqlite:///db.sqlite3",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+
+DATABASES = {"default": parsed_database}
 
 
 AUTH_USER_MODEL = "users.User"
