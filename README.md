@@ -28,6 +28,18 @@ docker compose up --build
 
 API will be available at `http://localhost:8000/api/`.
 
+## Admin bootstrap
+
+If your platform does not provide interactive shell access, you can bootstrap the Django admin user through environment variables:
+
+```env
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@example.com
+DJANGO_SUPERUSER_PASSWORD=change-me
+```
+
+The container startup runs `python manage.py ensure_admin_user`, which creates or updates the admin user idempotently.
+
 ## Main Endpoints
 
 - `GET/POST /api/users/`
