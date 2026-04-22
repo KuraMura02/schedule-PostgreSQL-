@@ -66,12 +66,18 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 
+database_url = os.getenv("DATABASE_URL")
+if not database_url and all(
+    os.getenv(key) for key in ("PGDATABASE", "PGUSER", "PGPASSWORD", "PGHOST", "PGPORT")
+):
+    database_url = (
+        f"postgresql://{os.getenv('PGUSER')}:{os.getenv('PGPASSWORD')}"
+        f"@{os.getenv('PGHOST')}:{os.getenv('PGPORT')}/{os.getenv('PGDATABASE')}"
+    )
+
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv(
-            "DATABASE_URL",
-            "postgresql://postgres:postgres@db:5432/schedule_db",
-        ),
+    "default": dj_database_url.parse(
+        database_url or "sqlite:///db.sqlite3",
         conn_max_age=600,
         conn_health_checks=True,
     )
