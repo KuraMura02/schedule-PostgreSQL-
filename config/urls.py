@@ -21,4 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api/import/", ScheduleImportView.as_view(), name="schedule-import"),
+    path("api/", include("apps.users.urls")),
 ]
