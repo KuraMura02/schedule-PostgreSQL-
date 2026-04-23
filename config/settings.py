@@ -54,10 +54,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 ROOT_URLCONF = "config.urls"
 
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
